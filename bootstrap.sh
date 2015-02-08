@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+cp /vagrant/config/sources.list /etc/apt/ -v
 apt-get update -q
 apt-get install gcc libgmp-dev alex happy curl libcurl4-gnutls-dev libpcre3-dev libffi-dev make python-software-properties vim ctags git tmux ruby ufw fail2ban xz-utils zsh -y -q
 
@@ -9,9 +10,13 @@ CABAL_VER=1.20.0.3
 if hash ghc 2>/dev/null; then
   echo "-----> GHC detected"
 else
-  GHC_URL="http://www.haskell.org/ghc/dist/$GHC_VER/ghc-$GHC_VER-x86_64-unknown-linux-deb7.tar.xz"
+  GHC_FILE="ghc-$GHC_VER-x86_64-unknown-linux-deb7.tar.xz"
+  GHC_URL="http://www.haskell.org/ghc/dist/$GHC_VER/$GHC_FILE"
   echo "-----> Downloading GHC $GHC_VER"
-  curl --silent -L "$GHC_URL" | unxz | tar x -C /tmp
+  if [ ! -e /vagrant/downloads/$GHC_FILE ]; then
+    wget --quiet -O /vagrant/downloads/$GHC_FILE $GHC_URL
+  fi
+  tar xf /vagrant/downloads/$GHC_FILE -C /tmp
   cd /tmp/ghc-$GHC_VER
   echo "-----> Installing GHC $GHC_VER"
   ./configure
@@ -21,9 +26,13 @@ fi
 if hash cabal 2>/dev/null; then
   echo "-----> Cabal detected"
 else
-  CABAL_URL="http://www.haskell.org/cabal/release/cabal-install-$CABAL_VER/cabal-install-$CABAL_VER.tar.gz"
+  CABAL_FILE="cabal-install-$CABAL_VER.tar.gz"
+  CABAL_URL="http://www.haskell.org/cabal/release/cabal-install-$CABAL_VER/$CABAL_FILE"
   echo "-----> Downloading cabal-install $CABAL_VER"
-  curl --silent -L "$CABAL_URL" | tar zx -C /tmp
+  if [ ! -e /vagrant/downloads/$CABAL_FILE ]; then
+    wget --quiet -O /vagrant/downloads/$CABAL_FILE $CABAL_URL
+  fi
+  tar xf /vagrant/downloads/$CABAL_FILE -C /tmp
   cd /tmp/cabal-install-$CABAL_VER
   echo "-----> Installing cabal-install $CABAL_VER"
   ./bootstrap.sh --global --no-doc
@@ -64,6 +73,3 @@ ufw --force enable
 
 echo "-----> Hardening OpenSSH"
 cp /vagrant/config/sshd_config /etc/ssh/sshd_config
-
-echo "-----> Installing Heroku toolbelt"
-wget -qO- https://toolbelt.heroku.com/install-ubuntu.sh | sh
