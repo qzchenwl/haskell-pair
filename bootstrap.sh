@@ -2,7 +2,11 @@
 
 cp /vagrant/config/sources.list /etc/apt/ -v
 apt-get update -q
-apt-get install gcc libgmp-dev alex happy curl libcurl4-gnutls-dev libpcre3-dev libffi-dev make python-software-properties vim ctags git tmux ruby ufw fail2ban xz-utils zsh -y -q
+apt-get install software-properties-common gcc libgmp-dev alex happy curl libcurl4-gnutls-dev libpcre3-dev libffi-dev make python-software-properties vim ctags git tmux ruby ufw fail2ban xz-utils zsh -y -q
+
+add-apt-repository ppa:chris-lea/node.js -y
+apt-get update -q
+apt-get install nodejs -y -q
 
 GHC_VER=7.8.3
 CABAL_VER=1.20.0.3
