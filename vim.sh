@@ -10,3 +10,5 @@ fi
 
 echo "-----> Installing/updating haskell-vim-now"
 curl --silent -o - https://raw.githubusercontent.com/begriffs/haskell-vim-now/master/install.sh | bash
+
+cp /vagrant/.vimrc.local $HOME
