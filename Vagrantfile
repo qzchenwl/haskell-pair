@@ -7,11 +7,11 @@ VAGRANTFILE_API_VERSION = "2"
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.box = "chef/ubuntu-14.04"
   config.vm.provision :shell, :path => "bootstrap.sh"
-  config.vm.provision :shell, :path => "vim.sh", :privileged => false
-  config.vm.provision :shell, :path => "emacs.sh", :privileged => false
   config.vm.provision :shell, :path => "zsh.sh", :privileged => false
   config.vm.provision :shell, :path => "git.sh", :privileged => false
   config.vm.provision :shell, :path => "hi.sh", :privileged => false
+  config.vm.provision :shell, :path => "emacs.sh", :privileged => false
+  config.vm.provision :shell, :path => "vim.sh", :privileged => false
 
   config.vm.provider "virtualbox" do |v|
     v.memory = 2048
